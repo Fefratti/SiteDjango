@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Meu Blog Django</title>
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'post_list' %}">Meu Blog</a></h1>
+        <a href="{% url 'post_create' %}">+ Novo Post</a>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>
