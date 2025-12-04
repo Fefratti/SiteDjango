@@ -1,12 +1,35 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-    <h2>{{ post.title }}</h2>
-    <p>Publicado em: {{ post.date|date:"d/m/Y H:i" }}</p>
-    
-    <div>{{ post.content|safe }}</div>
+    <article>
+        <h2>{{ post.title }}</h2>
+        <p>Publicado em: {{ post.date|date:"d/m/Y H:i" }}</p>
+        
+        <div>{{ post.content|safe }}</div>
+    </article>
 
     <hr>
-    <a href="{% url 'post_update' pk=post.pk %}">Editar</a>
-    <a href="{% url 'post_delete' pk=post.pk %}">Deletar</a>
+    <a href="{% url 'post_update' pk=post.pk %}">Editar Post</a> | 
+    <a href="{% url 'post_delete' pk=post.pk %}">Deletar Post</a>
+    
+    <hr>
+    <!-- SEÇÃO DE COMENTÁRIOS -->
+    <h3>Comentários</h3>
+    
+    <!-- Link para adicionar comentário -->
+    <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Adicionar comentário</a>
+    
+    <br><br>
+
+    <!-- Loop para mostrar os comentários (do mais recente para o antigo) -->
+    {% for comment in post.comments.all|dictsortreversed:"date" %}
+        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+            <strong>{{ comment.author }}</strong> disse:
+            <p>{{ comment.text|linebreaks }}</p>
+            <small>{{ comment.date|date:"d/m/Y H:i" }}</small>
+        </div>
+    {% empty %}
+        <p>Nenhum comentário ainda.</p>
+    {% endfor %}
+
 {% endblock %}
