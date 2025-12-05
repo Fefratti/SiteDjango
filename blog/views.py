@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from .models import Post
 from .forms import PostForm, CommentForm # Importando o novo form de comentários
+from .models import Post, Category
 
 # 1. Listar Posts
 class PostListView(ListView):
@@ -55,3 +56,19 @@ def add_comment_to_post(request, pk):
         form = CommentForm()
         
     return render(request, 'blog/add_comment_to_post.html', {'form': form})
+
+# 6. Listar todas as categorias
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'blog/category_list.html'
+    context_object_name = 'categories'
+
+# 7. Detalhe da Categoria (Lista de Posts filtrada)
+def category_detail(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    
+    # Filtra os posts que pertencem a essa categoria
+    posts = category.posts.all().order_by('-date')
+    
+    # Reutiliza o template 'post_list.html'
+    return render(request, 'blog/post_list.html', {'posts': posts, 'category': category})

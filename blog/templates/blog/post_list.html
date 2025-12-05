@@ -1,13 +1,27 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-    <h2>Lista de Posts</h2>
+    {% if category %}
+        <h2>Posts da categoria: {{ category.name }}</h2>
+    {% else %}
+        <h2>Todos os Posts</h2>
+    {% endif %}
+
     <ul>
         {% for post in posts %}
             <li>
                 <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
                 <small>({{ post.date|date:"d/m/Y" }})</small>
+                
+                <br>
+                <small>Tags: 
+                    {% for cat in post.categories.all %}
+                        {{ cat.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </small>
             </li>
+        {% empty %}
+            <li>Nenhum post encontrado.</li>
         {% endfor %}
     </ul>
 {% endblock %}
